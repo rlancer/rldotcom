@@ -1,6 +1,18 @@
 import Head from 'next/head'
-import Image from 'next/image'
+import Image, { ImageLoader, ImageLoaderProps } from 'next/image'
 import styles from '../styles/Home.module.css'
+
+const normalizeSrc = (src:string) => {
+  return src[0] === "/" ? src.slice(1) : src;
+};
+const cloudflareLoader = ({ src, width, quality }:ImageLoaderProps) => {
+  const params = [`width=${width}`];
+  if (quality) {
+    params.push(`quality=${quality}`);
+  }
+  const paramsString = params.join(",");
+  return `/cdn-cgi/image/${paramsString}/${normalizeSrc(src)}`;
+};
 
 export default function Home() {
   return (
@@ -60,7 +72,7 @@ export default function Home() {
         >
           Powered by{' '}
           <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            <img  src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
